@@ -45,11 +45,11 @@ path until it's back.
 Requirements: Docker Engine with the Compose plugin (or Docker Desktop). On
 Windows use Docker Desktop (WSL2 backend) or Docker inside WSL2.
 
-1. Copy this folder (`Meatybeatz/`) to your machine, e.g.
+1. Copy this folder (`MeatyBeatz/`) to your machine, e.g.
    `~/music/meatybeatz` on Linux or `C:\Users\you\meatybeatz` on Windows.
 2. Build and start:
    ```bash
-   cd Meatybeatz
+   cd MeatyBeatz
    docker compose up -d --build
    ```
 3. **Open http://localhost:8097** — done.
@@ -102,7 +102,7 @@ falls back to a plain JSON state file instead of `meatybeatz.db`.
 ### Quick start (one command)
 
 ```bash
-cd Meatybeatz
+cd MeatyBeatz
 node server/start.js
 ```
 
@@ -247,7 +247,7 @@ Notes:
 ## Project structure
 
 ```
-Meatybeatz/
+MeatyBeatz/
 ├── app/                      # the web app (vanilla JS, no build step)
 │   ├── index.html
 │   ├── styles.css
