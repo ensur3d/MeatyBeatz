@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MeatyBeatz — Free Music in Your Browser</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%3E%3Cpath%20fill='%238b5cf6'%20d='M12%203v10.55A3.97%203.97%200%200%200%2010%2013c-2.21%200-4%201.79-4%204s1.79%204%204%204%204-1.79%204-4V7h4V3h-6z'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="app" id="app">
+  <!-- ============ SIDEBAR ============ -->
+  <aside class="sidebar" id="sidebar">
+    <div class="logo">
+      <span class="logo-icon" id="logo-icon"></span>
+      <span class="logo-text">MeatyBeatz</span>
+    </div>
+
+    <nav class="nav">
+      <button class="nav-btn active" data-action="nav" data-view="home"><span class="ico" data-ico="home"></span><span class="label">Home</span></button>
+      <button class="nav-btn" data-action="nav" data-view="search"><span class="ico" data-ico="search"></span><span class="label">Search</span></button>
+      <button class="nav-btn" data-action="nav" data-view="library"><span class="ico" data-ico="library"></span><span class="label">Your Library</span></button>
+    </nav>
+
+    <div class="side-section">
+      <div class="side-head">
+        <span class="side-title">Collections</span>
+        <button class="icon-btn" data-action="new-collection" title="New playlist or genre"><span data-ico="plus"></span></button>
+      </div>
+      <div class="side-list" id="side-collections"></div>
+    </div>
+
+    <div class="side-foot">
+      <button class="nav-btn" data-action="settings"><span class="ico" data-ico="settings"></span><span class="label">Settings</span></button>
+    </div>
+  </aside>
+
+  <!-- ============ MAIN ============ -->
+  <main class="main" id="main"></main>
+</div>
+
+<!-- ============ PLAYER BAR ============ -->
+<footer class="player-bar" id="player-bar">
+  <div class="pb-left">
+    <img class="pb-thumb" id="pb-thumb" alt="" src="">
+    <div class="pb-meta">
+      <div class="pb-title" id="pb-title">Nothing playing</div>
+      <div class="pb-sub" id="pb-artist">Search, paste a link, or add music to get started</div>
+    </div>
+    <button class="icon-btn pb-like" id="pb-like" title="Save to Liked Songs"></button>
+  </div>
+
+  <div class="pb-center">
+    <div class="pb-controls">
+      <button class="ctl" id="btn-shuffle" title="Shuffle"><span data-ico="shuffle"></span></button>
+      <button class="ctl" id="btn-prev"><span data-ico="prev"></span></button>
+      <button class="ctl play-btn" id="btn-play"><span id="play-icon"></span></button>
+      <button class="ctl" id="btn-next"><span data-ico="next"></span></button>
+      <button class="ctl" id="btn-repeat" title="Repeat"><span data-ico="repeat"></span><span class="rep-badge" id="rep-badge">1</span></button>
+    </div>
+    <div class="pb-progress">
+      <span class="time" id="time-cur">0:00</span>
+      <div class="seekbar" id="seekbar">
+        <div class="seek-fill" id="seek-fill"></div>
+        <div class="seek-thumb" id="seek-thumb"></div>
+      </div>
+      <span class="time" id="time-dur">0:00</span>
+    </div>
+  </div>
+
+  <div class="pb-right">
+    <button class="icon-btn" id="btn-queue" title="Queue"><span data-ico="queue"></span></button>
+    <button class="icon-btn" id="btn-mute" title="Mute"><span id="mute-icon" data-ico="volHigh"></span></button>
+    <input type="range" id="vol" min="0" max="100" value="80" aria-label="Volume">
+  </div>
+</footer>
+
+<!-- hidden YouTube player host -->
+<div id="yt-host"><div id="yt-player"></div></div>
+
+<!-- dynamic layers -->
+<div id="queue-panel" class="hidden"></div>
+<div id="popover-root"></div>
+<div id="modal-root"></div>
+<div id="toast-root"></div>
+
+<script src="js/icons.js"></script>
+<script src="js/store.js"></script>
+<script src="js/youtube.js"></script>
+<script src="js/builtin.js"></script>
+<script src="js/search.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

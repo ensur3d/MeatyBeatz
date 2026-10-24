@@ -1,0 +1,141 @@
+# MeatyBeatz — permission-safe release WITH BUNDLED Invidious (any Linux
+# distro, or Docker on Windows/macOS).
+# One compose file, four services:
+#
+#   meatybeatz    web app + SQLite disk DB + local proxy (built from this folder)
+#   invidious     Invidious v2 — search + stream metadata for the app  → port 3010
+#   companion     Invidious companion (internal helper, NO public ports)
+#   invidious-db  PostgreSQL 14 for Invidious (NO public ports)
+#
+#   docker compose up -d --build
+#   → open http://127.0.0.1:8097  (or http://<your-server-ip>:8097 from your LAN)
+#
+# The app finds the bundled Invidious automatically (it defaults to
+# <this-host>:3010, derived from the address you opened the app at), so
+# there is nothing to configure. If Invidious is ever slow or down, the
+# app falls back to its built-in YouTube route on its own.
+#
+# Ports reachable from the network: 8097 (web), 8198 (disk DB),
+# 8199 (local proxy), 3010 (Invidious). Postgres stays internal.
+#
+# Permission model (why this is robust on any host):
+#   * The meatybeatz container NEVER needs root at runtime. It runs as
+#     MEATYBEATZ_UID:MEATYBEATZ_GID below, so every file it writes into its
+#     data folder is owned by THAT uid — never root. Hosts with ACL-based
+#     filesystems (e.g. ZFS/NFSv4) or Docker running containers inside user
+#     namespaces break when a container insists on root ownership; this
+#     release removes root from the picture entirely.
+#   * Set MEATYBEATZ_UID / MEATYBEATZ_GID to the uids that own your data
+#     folder on the host (check with: ls -ln <folder>).
+#   * The Invidious/Postgres/companion data lives in NAMED Docker volumes
+#     (postgresdata, companioncache) — Docker manages their ownership, so
+#     they never touch your folder permissions at all.
+
+services:
+  meatybeatz:
+    build: .
+    image: meatybeatz-invidious:latest
+    container_name: meatybeatz
+    ports:
+      - "8097:8097"   # web app
+      - "8198:8198"   # disk database (SQLite) — the browser talks to <host>:8198
+      - "8199:8199"   # local proxy (direct YouTube data for artist/album pages)
+    volumes:
+      # Point this at any persistent folder on your host (the default below
+      # keeps it next to the compose file), e.g. ~/meatybeatz-data:/data
+      - ./meatybeatz-data:/data
+    environment:
+      MEATYBEATZ_WEB_HOST: 0.0.0.0
+      MEATYBEATZ_DB_HOST: 0.0.0.0
+      MEATYBEATZ_PROXY_HOST: 0.0.0.0
+      # uid/gid the app runs as — should match the owner of the data folder above.
+      # Change these to your user's ids if your folder is owned by a different uid.
+      MEATYBEATZ_UID: "1000"
+      MEATYBEATZ_GID: "1000"
+    restart: unless-stopped
+
+  invidious:
+    image: quay.io/invidious/invidious:latest
+    container_name: invidious
+    ports:
+      - "3010:3000"   # the port MeatyBeatz expects its bundled instance on
+    environment:
+      INVIDIOUS_CONFIG: |
+        db:
+          dbname: invidious
+          user: invidious
+          password: invidious
+          host: invidious-db
+          port: 5432
+        check_tables: true
+        # Internal connection to the companion service (same compose network).
+        invidious_companion:
+          - private_url: "http://invidious-companion:8282/companion"
+        # Shared secret between Invidious and the companion. Both must match
+        # (see SERVER_SECRET_KEY on the companion service below). 
+        # IT is NOT recommended to use the same key as HMAC KEY. Generate a new key!
+        # Use the key generated in the 2nd step
+        invidious_companion_key: "CHANGE_ME!!"   # must be exactly 16 characters
+        # HMAC key used for signed URLs on this instance (private use).
+        # Use the key generated in the 1st step
+        hmac_key: "CHANGE_ME!!"              # must be exactly 16 characters
+    healthcheck:
+      test: wget -nv --tries=1 --spider http://127.0.0.1:3000/api/v1/stats || exit 1
+      interval: 30s
+      timeout: 5s
+      retries: 2
+    depends_on:
+      invidious-db:
+        condition: service_healthy
+      invidious-companion:
+        condition: service_started
+    logging:
+      options:
+        max-size: "1G"
+        max-file: "4"
+    restart: unless-stopped
+
+  invidious-companion:
+    image: quay.io/invidious/invidious-companion:latest
+    container_name: invidious-companion
+    environment:
+      # Use the key generated in the 2nd step
+      # Must equal invidious_companion_key above (exactly 16 characters).
+      - SERVER_SECRET_KEY=CHANGE_ME!!SAME_AS_INVIDIOUS_COMPANION_SECRET_KEY_FROM_INVIDIOUS_CONFIG
+    restart: unless-stopped
+    # Internal-only service: no ports published.
+    logging:
+      options:
+        max-size: "1G"
+        max-file: "4"
+    cap_drop:
+      - ALL
+    read_only: true
+    # cache for youtube library
+    volumes:
+      - companioncache:/var/tmp/youtubei.js:rw
+    security_opt:
+      - no-new-privileges:true
+
+  invidious-db:
+    image: docker.io/library/postgres:14
+    container_name: invidious-db
+    environment:
+      POSTGRES_DB: invidious
+      POSTGRES_USER: invidious
+      POSTGRES_PASSWORD: invidious
+    volumes:
+      - postgresdata:/var/lib/postgresql/data
+      # Schema bootstrap — runs ONCE, only when the volume is first created.
+      - ./invidious-init/sql:/config/sql:ro
+      - ./invidious-init/init-invidious-db.sh:/docker-entrypoint-initdb.d/init-invidious-db.sh:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+volumes:
+  postgresdata:
+  companioncache:
