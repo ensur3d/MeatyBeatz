@@ -83,7 +83,7 @@ Windows use Docker Desktop (WSL2 backend) or Docker inside WSL2.
    ```bash
    git clone https://github.com/ensur3d/MeatyBeatz.git
    ```
-2. Build and start:
+2. Build and start: Remember to generate two 16-character keys for the compose
    ```bash
    cd MeatyBeatz
    docker compose up -d --build
