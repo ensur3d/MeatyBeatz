@@ -39,22 +39,7 @@ route automatically — nothing breaks, you just lose the faster search/stream
 path until it's back.
 
 ---
-
-## Quick start with Docker (Linux / Windows / macOS)
-
-Requirements: Docker Engine with the Compose plugin (or Docker Desktop). On
-Windows use Docker Desktop (WSL2 backend) or Docker inside WSL2.
-
-1. Copy this folder (`MeatyBeatz/`) to your machine, e.g.
-   `~/music/MeatyBeatz` on Linux or `C:\Users\you\MeatyBeatz` on Windows.
-2. Build and start:
-   ```bash
-   cd MeatyBeatz
-   docker compose up -d --build
-   ```
-3. **Open http://127.0.0.1:8097** — done.
-
-Notes:
+Notes: Before you get started review this for docker compose etc.
 
 - Your library is created in `./meatybeatz-data/` next to the compose file,
   owned by uid `1000` (your normal user on most Linux distros). If your data
@@ -87,6 +72,23 @@ Notes:
   Invidious/Postgres/companion named volumes** (search cache, sessions) — your
   music library in `./meatybeatz-data` is a bind mount and is NOT affected by
   `-v`.
+---
+## Quick start with Docker (Linux / Windows / macOS)
+
+Requirements: Docker Engine with the Compose plugin (or Docker Desktop). On
+Windows use Docker Desktop (WSL2 backend) or Docker inside WSL2.
+
+1. Clone this project (`MeatyBeatz/`) to your machine, e.g.
+   `~/music/MeatyBeatz` on Linux or `C:\Users\you\MeatyBeatz` on Windows
+   ```bash
+   git clone https://github.com/ensur3d/MeatyBeatz.git
+   ```
+2. Build and start:
+   ```bash
+   cd MeatyBeatz
+   docker compose up -d --build
+   ```
+3. **Open http://127.0.0.1:8097** — done.
 
 ---
 
