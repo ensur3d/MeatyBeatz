@@ -46,7 +46,7 @@ Requirements: Docker Engine with the Compose plugin (or Docker Desktop). On
 Windows use Docker Desktop (WSL2 backend) or Docker inside WSL2.
 
 1. Copy this folder (`MeatyBeatz/`) to your machine, e.g.
-   `~/music/meatybeatz` on Linux or `C:\Users\you\meatybeatz` on Windows.
+   `~/music/MeatyBeatz` on Linux or `C:\Users\you\MeatyBeatz` on Windows.
 2. Build and start:
    ```bash
    cd MeatyBeatz
