@@ -101,9 +101,10 @@ Requirements: **Node ≥ 24** recommended — it includes built-in SQLite
 (`node:sqlite`) for the disk database. Older Node still works; the disk DB then
 falls back to a plain JSON state file instead of `meatybeatz.db`.
 
-### Quick start (one command)
+### Quick start (one command) NOTE For this to work use an external Invidious Service
 
 ```bash
+git clone https://github.com/ensur3d/MeatyBeatz.git
 cd MeatyBeatz
 node server/start.js
 ```
