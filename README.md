@@ -44,7 +44,7 @@ Windows use Docker Desktop (WSL2 backend) or Docker inside WSL2.
    `~/music/meatybeatz` on Linux or `C:\Users\you\meatybeatz` on Windows.
 2. Build and start:
    ```bash
-   cd meatybeatz-release-final
+   cd Meatybeatz
    docker compose up -d --build
    ```
 3. **Open http://localhost:8097** — done.
