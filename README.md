@@ -52,7 +52,7 @@ Windows use Docker Desktop (WSL2 backend) or Docker inside WSL2.
    cd MeatyBeatz
    docker compose up -d --build
    ```
-3. **Open http://localhost:8097** — done.
+3. **Open http://127.0.0.1:8097** — done.
 
 Notes:
 
