@@ -7,7 +7,12 @@ nothing else to set up. Works on Linux, Windows (Docker Desktop or WSL2) and
 macOS; can also run as plain Node processes without Docker.
 
 ---
+<img width="1499" height="1085" alt="Screenshot from 2026-10-24 02-27-21" src="https://github.com/user-attachments/assets/68c5efe5-a7bb-4ff1-af69-9ce503d6bb2c" />
+<img width="1500" height="1078" alt="Screenshot from 2026-10-24 02-27-37" src="https://github.com/user-attachments/assets/9e37dec3-82d0-4562-995b-c992a8b6e23f" />
+<img width="1495" height="1081" alt="Screenshot from 2026-10-24 02-42-39" src="https://github.com/user-attachments/assets/4f7e2bda-55e2-402e-8185-07668e03b017" />
 
+
+---
 ## What's running (one compose file, four services)
 
 | Service | Image | Host port | Purpose |
